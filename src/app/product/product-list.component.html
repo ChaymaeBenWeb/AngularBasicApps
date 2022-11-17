@@ -1,0 +1,67 @@
+<div class='card'>
+    <div class='card-header'>
+      {{pageTitle}} <!--Interpolation insère des chaines interpolées dans le text entre les elements d'HTML ou attribue des propriétés d'élément from Component to Dom-->
+    </div>
+    <div class='card-body'>
+      <div class='row'>
+        <div class='col-md-2'>Filter by:</div>
+        <div class='col-md-4'>
+          <input type='text' [(ngModel)]='listFilter'/> <!--ici ngModel est une directive qui permet de faire le two way binding -->
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-md-6'>
+          <h4>Filtered by: {{listFilter}}</h4>
+        </div>
+      </div>
+      <div class='table-responsive'>
+        <table class='table'
+               *ngIf='products.length'>
+          <thead>
+            <tr>
+              <th>
+                
+                <button class='btn btn-primary'
+                (click)='toggleImage()'>
+                <!--JavaScript conditional operator is ? avec une spécification de la condition on utilisant l'interpolation ? vaut true : vaut false-->
+                  {{showImage ? 'Hide': 'showImage' }}  Image
+                </button> <!--Event binding when user clic it's call the method from the component-->
+              </th>
+              <th>Product</th>
+              <th>Code</th>
+              <th>Available</th>
+              <th>Price</th>
+              <th>5 Star Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let product of filterProducts" >
+              <td>
+                <!--Properety binding from the component to DOM [] and *ngif here is for adding or remove html element from the dom-->
+                <img *ngIf="showImage"
+                 [src]='product.imageUrl' 
+                      [title]="product.productName"
+                      [style.width.px]='imageWidth'
+                      [style.margin.px]='imageMargin'>
+              </td>
+              <td>
+                <a [routerLink]="['/products', product.productId]">{{product.productName}}</a>
+              </td>
+              
+              <td>{{product.productName}}</td>
+              <td>{{product.productCode | lowercase | convertToSpace:'-'}}</td>
+              <td>{{product.releaseDate}}</td>
+              <td>{{product.price|currency:'USD':'symbol':'1.2-2'}}</td> <!--ajouter le pipe pour fomater la forme de la donnée (ici on rajoute le symbol $) : pour rajouter des parametres-->
+              <td><pm-star [rating]='product.starRating' (ratingClicked)="onRatingClicked($event)"></pm-star></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div *ngIf='errorMessage'
+     class='alert alert-danger'>
+  Error: {{ errorMessage }}
+</div>
+ 
+ 
